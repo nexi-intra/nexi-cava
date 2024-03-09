@@ -25,6 +25,7 @@ import { redirect, useRouter, useSearchParams } from 'next/navigation'
 import { useContext, useEffect, useState } from 'react'
 import jwt from "jsonwebtoken"
 import { set } from 'date-fns'
+import { APPNAME } from '@/global'
 export interface Me {
   "@odata.context": string
   businessPhones: string[]
@@ -46,6 +47,7 @@ export default function SSO() {
   const [jwtToken, setjwtToken] = useState<jwt.JwtPayload>()
   const token = searchParams.get('token')
   const cmd = searchParams.get('cmd')
+  const openPath = searchParams.get('path')
   const [data, setdata] = useState<any>()
   const router = useRouter()
   const [frameHref, setframeHref] = useState("")
@@ -64,7 +66,7 @@ export default function SSO() {
         
       }else
       if (cmd === "framed") {
-        router.push("/cava")
+        router.push(openPath ?? "/"+APPNAME)
        
       }
       setdata(result)

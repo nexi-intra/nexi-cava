@@ -1,11 +1,12 @@
 "use client"
 
+import { APPNAME } from "@/global";
 import { redirect } from "next/navigation";
 import { useEffect } from "react";
 
 export default function Home(){
     useEffect(() => {
-   redirect("/cava")
+   redirect("/"+APPNAME)
     }, [])
     
     return <div>

@@ -44,18 +44,9 @@ spec:
         ports:
           - containerPort: $port
         env:
-        - name: SPAUTH_TENANTID
-          value: $($env:SPAUTH_TENANTID)
-        - name: SPAUTH_CLIENTID
-          value: $($env:SPAUTH_CLIENTID)
-        - name: SPAUTH_CLIENTSECRET
-          value: $($env:SPAUTH_CLIENTSECRET)
-        - name: AZURE_AD_CLIENT_ID
-          value: $($env:AZURE_AD_CLIENT_ID)
-        - name: AZURE_AD_CLIENT_SECRET
-          value: $($env:AZURE_AD_CLIENT_SECRET)
-        - name: AZURE_AD_TENANT_ID
-          value: $($env:AZURE_AD_TENANT_ID)
+        - name: DEBUG
+          value: *
+
         
 ---
 apiVersion: v1
