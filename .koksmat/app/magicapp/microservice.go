@@ -2,45 +2,94 @@ package magicapp
 
 import (
 	"context"
+	"encoding/json"
 	"log"
+	"strings"
 	"time"
 
 	"github.com/nats-io/nats.go"
+	"github.com/nats-io/nats.go/jetstream"
 	"github.com/nats-io/nats.go/micro"
 )
 
-type ServiceRequest struct {
-	Args    []string `json:"args"`
-	Body    string   `json:"body"`
-	Channel string   `json:"channel"`
-	Timeout int      `json:"timeout"`
+type ListItemChanged struct {
+	List    string `json:"list"`
+	Site    string `json:"site"`
+	Tenant  string `json:"tenant"`
+	Id      string `json:"id"`
+	Version string `json:"version"`
 }
 
 const SERVICENAME = "nexi-cava"
 
-func Update(req micro.Request) {
-	// var payload ServiceRequest
-	// _ = json.Unmarshal([]byte(req.Data()), &payload)
-	// log.Println("Update", payload)
-
-	// _, pwsherr := execution.ExecutePowerShell("john", "*", SERVICENAME, "00-magic", "20-update.ps1", "")
-	// if pwsherr != nil {
-	// 	log.Println(pwsherr)
-	// 	req.Respond([]byte(pwsherr.Error()))
-	// 	return
-	// }
-	log.Println("Update done")
-	req.RespondJSON("done")
-
+func SignalUpdate() {
+	nc, err := nats.Connect(nats.DefaultURL)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer nc.Close()
+	js, err := nc.JetStream()
+	if err != nil {
+		log.Fatal(err)
+	}
+	payload := ListItemChanged{
+		List:    "rooms",
+		Site:    "nexi",
+		Tenant:  "nexi",
+		Id:      "123",
+		Version: "1",
+	}
+	b, err := json.Marshal(payload)
+	if err != nil {
+		log.Fatal(err)
+	}
+	_, err = js.Publish("rooms", b)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
+var nc *nats.Conn
+
+var kv jetstream.KeyValue
+
+func Update(req micro.Request) {
+	var payload ListItemChanged
+	err := json.Unmarshal([]byte(req.Data()), &payload)
+	//log.Println("Update", payload)
+
+	if err != nil {
+		log.Println(err)
+		req.Respond([]byte(err.Error()))
+		return
+	}
+	key := payload.Tenant + "." + payload.Site + "." + strings.ReplaceAll(payload.List, " ", "") + "." + payload.Id + "." + payload.Version
+
+	entry, _ := kv.Get(context.Background(), key)
+	// if err != nil {
+	// 	log.Println(err)
+	// 	req.Respond([]byte(err.Error()))
+	// 	return
+	// }
+	if entry == nil {
+		log.Println("Key", key, "Entry not found")
+		kv.Create(context.Background(), key, []byte("n.a."))
+		req.RespondJSON("created")
+		return
+	} else {
+		//		log.Println("Update done")
+		log.Println("Key", key, "Matched")
+		req.RespondJSON("done")
+	}
+
+}
 func StartMicroService() {
 	// Parent context cancels connecting/reconnecting altogether.
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
 	var err error
-	var nc *nats.Conn
+
 	opts := []nats.Option{
 
 		nats.ReconnectWait(2 * time.Second),
@@ -84,6 +133,13 @@ WaitForEstablishedConnection:
 	if ctx.Err() != nil {
 		log.Fatal(ctx.Err())
 	}
+	js, _ := jetstream.New(nc)
+
+	defer cancel()
+
+	kv, _ = js.CreateKeyValue(ctx, jetstream.KeyValueConfig{
+		Bucket: "sharepoint",
+	})
 
 	srv, err := micro.AddService(nc, micro.Config{
 		Name: SERVICENAME,
@@ -92,7 +148,8 @@ WaitForEstablishedConnection:
 		Description: "Manage meeting services",
 	})
 	root := srv.AddGroup(SERVICENAME)
-	root.AddEndpoint("hook", micro.HandlerFunc(Update))
+	sharepoint := root.AddGroup("sharepoint")
+	sharepoint.AddEndpoint("hook", micro.HandlerFunc(Update))
 	for {
 		if nc.IsClosed() {
 			break
