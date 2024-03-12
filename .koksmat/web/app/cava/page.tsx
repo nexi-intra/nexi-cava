@@ -1,13 +1,12 @@
 "use client"
 import { Button } from "@/components/ui/button"
 import Logo from "@/koksmat/components/logo"
-import { useEffect, useState } from "react"
-import { updateRooms } from "./server"
-import {
-  connect,
-  NatsConnection,
-  StringCodec,
-} from "nats.ws";
+import { useContext, useEffect, useState } from "react"
+import { createRooms, deleteRooms, getTransactionId, updateRooms } from "./server"
+import ShowNatsLog from "./components/nats"
+import { set } from "date-fns"
+import { Result } from "@/koksmat/httphelper"
+import { MagicboxContext } from "@/koksmat/magicbox-context"
 
 
 
@@ -17,76 +16,64 @@ function sleep(ms: number) {
   return new Promise(resolve => setTimeout(resolve,ms));
 }
 
-export default  function RedirectToLoggedinUse() {
-  const [nats, setNats] = useState<NatsConnection>();
+export default  function CavaHome() {
   const [running, setrunning] = useState(false)
   const [result, setresult] = useState("")
   const [error, seterror] = useState("")
   const [logEntries, setlogEntries] = useState<string[]>([])
-// https://github.com/nats-io/nats.ws
+  const [transactionId, settransactionid] = useState("")
 
-  useEffect(() => {
-    (async () => {
-      const nc = await connect({
-        servers: ["ws://0.0.0.0:443"],
-      })
-      setNats(nc)
-      const sub = nc.subscribe("cava.*");
-      const sc = StringCodec();
-      (async () => {
-        for await (const m of sub) {
+  const magicbox = useContext(MagicboxContext)
 
-          setresult(sc.decode(m.data))
-          logEntries.push(`[${sub.getProcessed()}]: ${sc.decode(m.data)}`)
-          setlogEntries(logEntries)
-        }
-        console.log("subscription closed");
-      })();
-
-      console.log("connected to NATS")
-    })();
-
-    return () => {
-      nats?.drain();
-      console.log("closed NATS connection")
-    }
-  }, [])
-  const run = async () => {
-    setrunning(true)
-    const result = await updateRooms()
+  const run = async (method : (id:string)=>Promise<Result<any>>) => {
     
-    await sleep(3000)
-    setresult(result)
+
+    setrunning(true)
+    setresult("")
+    seterror("")
+
+    const transactionId = await getTransactionId()
+    settransactionid(transactionId)
+    const result = await method(transactionId)
+    
+
+    setresult(result.data || "")
+    seterror(result.errorMessage || "")
     setrunning(false)
   }
+
+  const doUpdate = async () => run(updateRooms)
+  const doCreate = async () => run(createRooms)
+  const doDelete = async () => run(deleteRooms)
   return (
-    <div className="space-y-3">
+    <div >
+      <div className="space-y-3 p-4">
+        {magicbox?.user?.name && <div>Logged in as {magicbox.user.name}</div>}
       <div>
-      <div>
-       <Button disabled={running} onClick={()=>run()}>Create Rooms</Button>
+       <Button disabled={running} onClick={()=>doCreate()}>Create Rooms</Button>
        </div>
        <div>
-       <Button disabled={running} onClick={()=>run()}>Update Rooms</Button>
+       <Button disabled={running} onClick={()=>doUpdate()}>Update Rooms</Button>
        </div>
        <div>
-       <Button disabled={running} onClick={()=>run()} variant={"destructive"}>Delete Rooms</Button>
+       <Button disabled={running} onClick={()=>doDelete()} variant={"destructive"}>Delete Rooms</Button>
        </div>
-       <div>
+       {/* <div>
        <Button disabled={running} onClick={()=>run()}>Change Email</Button>
        </div>
        <div>
        <Button disabled={running} onClick={()=>run()}>Run all</Button>
-       </div>       
+       </div>        */}
        </div>
-     {running && <div>Running...</div>}
+     {running && <div>Running... </div>}
       {result && <div>Result: {result}</div>}
       {error && <div className="text-red-500">Error: {error}</div>}
-      <pre>
-        {JSON.stringify(logEntries, null, 2)}
-      </pre>
-      {logEntries.map((entry, i) => (
-        <div key={i}>{entry}</div>
-      ))}
+      {transactionId &&
+      <div>
+        transactionId: {transactionId}
+     <ShowNatsLog  subject={"log."+transactionId} />
+     </div>
+     }
     </div>
   )
 }

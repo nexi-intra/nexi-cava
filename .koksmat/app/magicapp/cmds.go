@@ -1,3 +1,4 @@
+
 package magicapp
 
 import (
@@ -8,6 +9,7 @@ import (
 	"strings"
 
 	"github.com/365admin/nexi-cava/endpoints"
+	"github.com/365admin/nexi-cava/cmds"
 	"github.com/spf13/cobra"
 	"github.com/swaggest/rest/web"
 	swgui "github.com/swaggest/swgui/v4emb"

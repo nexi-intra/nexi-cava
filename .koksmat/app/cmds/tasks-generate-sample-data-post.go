@@ -3,7 +3,7 @@
 // -------------------------------------------------------------------
 /*
 ---
-title: Web deploy to production
+title: Generate Sample Data
 ---
 */
 package cmds
@@ -17,9 +17,9 @@ import (
 "github.com/365admin/nexi-cava/execution"
 "github.com/365admin/nexi-cava/utils"
 )
-func ProvisionWebdeployproductionPost(ctx context.Context, args  []string)  ( *string, error) {
+func TasksGenerateSampleDataPost(ctx context.Context, args  []string)  ( *string, error) {
 	
-	_, pwsherr := execution.ExecutePowerShell("john","*","nexi-cava","60-provision","10-web.ps1","" )
+	_, pwsherr := execution.ExecutePowerShell("john","*","nexi-cava","20-tasks","00-generate-sample-data.ps1","" )
 	if (pwsherr != nil) {
 		return nil,pwsherr
 	}

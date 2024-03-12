@@ -3,7 +3,7 @@
 // -------------------------------------------------------------------
 /*
 ---
-title: Web deploy to production
+title: Invoice
 ---
 */
 package endpoints
@@ -17,7 +17,7 @@ import (
 "github.com/365admin/nexi-cava/execution"
 "github.com/365admin/nexi-cava/utils"
 )
-func ProvisionWebdeployproductionPost() usecase.Interactor {
+func MagicInvoicePost() usecase.Interactor {
 type Request struct {
 	
 	
@@ -25,7 +25,7 @@ type Request struct {
 }
 u := usecase.NewInteractor(func(ctx context.Context, input Request, output *string) error {
 	
-	_, err := execution.ExecutePowerShell("john","*","nexi-cava","60-provision","10-web.ps1","" )
+	_, err := execution.ExecutePowerShell("john","*","nexi-cava","00-magic","30-invoice.ps1","" )
 	if (err != nil) {
 		return err
 	}
@@ -33,8 +33,8 @@ u := usecase.NewInteractor(func(ctx context.Context, input Request, output *stri
 	return err
 
 })
-u.SetTitle("Web deploy to production")
+u.SetTitle("Invoice")
 // u.SetExpectedErrors(status.InvalidArgument)
-u.SetTags("Provision")
+u.SetTags("Magic Buttons")
 return u
 }

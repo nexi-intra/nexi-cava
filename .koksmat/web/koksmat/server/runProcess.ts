@@ -2,7 +2,6 @@
 import { Result, https } from "@/koksmat/httphelper";
 import { SpawnOptionsWithoutStdio, spawn } from "child_process";
 import { MessageType } from "./MessageType";
-import { ko } from "date-fns/locale";
 
 
 const broadcast = async (channel:string,text: string, isError?: boolean) => {
@@ -45,6 +44,7 @@ export const runProcess = (command: string, args : string[], timeout: number,cha
       //reject("Timeout");
     }, timeout * 1000);
     
+    process.env.KOKSMAT_TRANSACTION_ID = channel
     const options : SpawnOptionsWithoutStdio = {env: process.env,cwd}
 
     console.log("runProcess",command,args) //.map(x=>{if (x.indexOf(" ")> -1){return `"${x}"`} else return x}).join(" "))
@@ -96,3 +96,5 @@ export const runProcess = (command: string, args : string[], timeout: number,cha
     });
   });
 };
+
+

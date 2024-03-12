@@ -3,7 +3,7 @@
 // -------------------------------------------------------------------
 /*
 ---
-title: Web deploy to production
+title: Submit Orders
 ---
 */
 package cmds
@@ -17,9 +17,9 @@ import (
 "github.com/365admin/nexi-cava/execution"
 "github.com/365admin/nexi-cava/utils"
 )
-func ProvisionWebdeployproductionPost(ctx context.Context, args  []string)  ( *string, error) {
+func MagicSubmitOrdersPost(ctx context.Context, args  []string)  ( *string, error) {
 	
-	_, pwsherr := execution.ExecutePowerShell("john","*","nexi-cava","60-provision","10-web.ps1","" )
+	_, pwsherr := execution.ExecutePowerShell("john","*","nexi-cava","00-magic","10-close-delivery.ps1","" )
 	if (pwsherr != nil) {
 		return nil,pwsherr
 	}

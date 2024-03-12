@@ -1,9 +1,11 @@
 <#---
-title: Step 1
-tag: step1
+title: Build Go
+tag: build-go
 ---#>
 
-# Step 1
+#
+
+# Build Go
 
 
 if ((Split-Path -Leaf (Split-Path  -Parent -Path $PSScriptRoot)) -eq "sessions"){
