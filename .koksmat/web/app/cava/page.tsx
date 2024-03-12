@@ -71,7 +71,7 @@ export default  function CavaHome() {
       {transactionId &&
       <div>
         transactionId: {transactionId}
-     <ShowNatsLog  subject={"log."+transactionId} />
+     <ShowNatsLog  subject={"log.*"} />
      </div>
      }
     </div>

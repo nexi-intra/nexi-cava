@@ -7,34 +7,29 @@ title: Invoice
 ---
 */
 package endpoints
+
 import (
-"context"
-"encoding/json"
-"os"
-"path"
-"github.com/swaggest/usecase"
-"github.com/365admin/nexi-cava/schemas"
-"github.com/365admin/nexi-cava/execution"
-"github.com/365admin/nexi-cava/utils"
+	"context"
+
+	"github.com/365admin/nexi-cava/execution"
+	"github.com/swaggest/usecase"
 )
+
 func MagicInvoicePost() usecase.Interactor {
-type Request struct {
-	
-	
-
-}
-u := usecase.NewInteractor(func(ctx context.Context, input Request, output *string) error {
-	
-	_, err := execution.ExecutePowerShell("john","*","nexi-cava","00-magic","30-invoice.ps1","" )
-	if (err != nil) {
-		return err
+	type Request struct {
 	}
-	
-	return err
+	u := usecase.NewInteractor(func(ctx context.Context, input Request, output *string) error {
 
-})
-u.SetTitle("Invoice")
-// u.SetExpectedErrors(status.InvalidArgument)
-u.SetTags("Magic Buttons")
-return u
+		_, err := execution.ExecutePowerShell("john", "*", "nexi-cava", "00-magic", "30-invoice.ps1", "")
+		if err != nil {
+			return err
+		}
+
+		return err
+
+	})
+	u.SetTitle("Invoice")
+	// u.SetExpectedErrors(status.InvalidArgument)
+	u.SetTags("Magic Buttons")
+	return u
 }

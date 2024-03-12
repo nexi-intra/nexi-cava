@@ -7,24 +7,19 @@ title: Submit Orders
 ---
 */
 package cmds
+
 import (
-"context"
-"encoding/json"
-"os"
-"path"
-"github.com/spf13/cobra"
-"github.com/365admin/nexi-cava/schemas"
-"github.com/365admin/nexi-cava/execution"
-"github.com/365admin/nexi-cava/utils"
+	"context"
+
+	"github.com/365admin/nexi-cava/execution"
 )
-func MagicSubmitOrdersPost(ctx context.Context, args  []string)  ( *string, error) {
-	
-	_, pwsherr := execution.ExecutePowerShell("john","*","nexi-cava","00-magic","10-close-delivery.ps1","" )
-	if (pwsherr != nil) {
-		return nil,pwsherr
+
+func MagicSubmitOrdersPost(ctx context.Context, args []string) (*string, error) {
+
+	_, pwsherr := execution.ExecutePowerShell("john", "*", "nexi-cava", "00-magic", "00-submit-orders.ps1", "")
+	if pwsherr != nil {
+		return nil, pwsherr
 	}
 	return nil, nil
-	
-
 
 }

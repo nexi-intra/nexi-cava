@@ -7,24 +7,19 @@ title: Invoice
 ---
 */
 package cmds
+
 import (
-"context"
-"encoding/json"
-"os"
-"path"
-"github.com/spf13/cobra"
-"github.com/365admin/nexi-cava/schemas"
-"github.com/365admin/nexi-cava/execution"
-"github.com/365admin/nexi-cava/utils"
+	"context"
+
+	"github.com/365admin/nexi-cava/execution"
 )
-func TasksInvoicePost(ctx context.Context, args  []string)  ( *string, error) {
-	
-	_, pwsherr := execution.ExecutePowerShell("john","*","nexi-cava","20-tasks","30-invoice.ps1","" )
-	if (pwsherr != nil) {
-		return nil,pwsherr
+
+func TasksInvoicePost(ctx context.Context, args []string) (*string, error) {
+
+	_, pwsherr := execution.ExecutePowerShell("john", "*", "nexi-cava", "20-tasks", "30-invoice.ps1", "")
+	if pwsherr != nil {
+		return nil, pwsherr
 	}
 	return nil, nil
-	
-
 
 }

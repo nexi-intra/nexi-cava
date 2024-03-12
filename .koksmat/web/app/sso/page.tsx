@@ -58,7 +58,7 @@ export default function SSO() {
         return
       } 
       const result = await https<Me>(token , "GET", "https://graph.microsoft.com/v1.0/me")
-      magicbox.setAccount(result.data?.displayName ??"", result.data?.mail??"", "", result.data?.id??"")
+      magicbox.setAccount(result.data?.displayName ??"", result.data?.mail??"", "", result.data?.id??"",[])
       magicbox.setAuthToken(token, "SharePoint")
 
       if (!cmd){

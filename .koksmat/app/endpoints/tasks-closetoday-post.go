@@ -3,7 +3,7 @@
 // -------------------------------------------------------------------
 /*
 ---
-title: Submit Orders
+title: Close Today
 ---
 */
 package endpoints
@@ -15,12 +15,12 @@ import (
 	"github.com/swaggest/usecase"
 )
 
-func MagicSubmitOrdersPost() usecase.Interactor {
+func TasksClosetodayPost() usecase.Interactor {
 	type Request struct {
 	}
 	u := usecase.NewInteractor(func(ctx context.Context, input Request, output *string) error {
 
-		_, err := execution.ExecutePowerShell("john", "*", "nexi-cava", "00-magic", "00-submit-orders.ps1", "")
+		_, err := execution.ExecutePowerShell("john", "*", "nexi-cava", "20-tasks", "20-close-today.ps1", "")
 		if err != nil {
 			return err
 		}
@@ -28,8 +28,8 @@ func MagicSubmitOrdersPost() usecase.Interactor {
 		return err
 
 	})
-	u.SetTitle("Submit Orders")
+	u.SetTitle("Close Today")
 	// u.SetExpectedErrors(status.InvalidArgument)
-	u.SetTags("Magic Buttons")
+	u.SetTags("Tasks")
 	return u
 }

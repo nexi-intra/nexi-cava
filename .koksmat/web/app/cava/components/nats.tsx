@@ -35,7 +35,7 @@ export default function ShowNatsLog(props: { subject: string }) {
     if (!nats) return;
     const sc = StringCodec();
     logEntries2.current = []
-    const sub = nats.subscribe(subject,{callback: (err, msg) => {
+    const sub = nats.subscribe("log.1",{callback: (err, msg) => {
         if (err) {
             console.error(err);
             return;
@@ -57,7 +57,7 @@ export default function ShowNatsLog(props: { subject: string }) {
         sub.unsubscribe();
       };
   }, [nats,subject]);
-return null
+//return null
   return (
     <div className="">
 

@@ -38,7 +38,7 @@ export  function MSALWrapper({
 
             if (accounts.length > 0) {
                 msalInstance.setActiveAccount(accounts[0]);
-                magicbox.setAccount(accounts[0].name ?? "", accounts[0].username ?? "", "", accounts[0].localAccountId ?? "")
+                magicbox.setAccount(accounts[0].name ?? "", accounts[0].username ?? "", "", accounts[0].localAccountId ?? "",accounts[0].idTokenClaims?.roles ?? [])
 
             }
 
@@ -47,10 +47,11 @@ export  function MSALWrapper({
                 console.log("MSAL", event.eventType)
 
                 if (event.eventType === EventType.LOGIN_SUCCESS && event.payload) {
+                    debugger
                     const payload = event.payload as AuthenticationResult;
                     const account = payload.account;
                     msalInstance.setActiveAccount(account);
-                    magicbox.setAccount(accounts[0].name ?? "", accounts[0].username ?? "", "", accounts[0].localAccountId ?? "")
+                    magicbox.setAccount(accounts[0].name ?? "", accounts[0].username ?? "", "", accounts[0].localAccountId ?? "",accounts[0].idTokenClaims?.roles ?? [])
                 }
             });
 

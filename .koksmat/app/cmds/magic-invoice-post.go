@@ -7,24 +7,19 @@ title: Invoice
 ---
 */
 package cmds
+
 import (
-"context"
-"encoding/json"
-"os"
-"path"
-"github.com/spf13/cobra"
-"github.com/365admin/nexi-cava/schemas"
-"github.com/365admin/nexi-cava/execution"
-"github.com/365admin/nexi-cava/utils"
+	"context"
+
+	"github.com/365admin/nexi-cava/execution"
 )
-func MagicInvoicePost(ctx context.Context, args  []string)  ( *string, error) {
-	
-	_, pwsherr := execution.ExecutePowerShell("john","*","nexi-cava","00-magic","30-invoice.ps1","" )
-	if (pwsherr != nil) {
-		return nil,pwsherr
+
+func MagicInvoicePost(ctx context.Context, args []string) (*string, error) {
+
+	_, pwsherr := execution.ExecutePowerShell("john", "*", "nexi-cava", "00-magic", "30-invoice.ps1", "")
+	if pwsherr != nil {
+		return nil, pwsherr
 	}
 	return nil, nil
-	
-
 
 }

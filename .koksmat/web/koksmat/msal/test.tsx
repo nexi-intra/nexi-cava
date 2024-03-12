@@ -9,6 +9,7 @@ import { https } from "@/koksmat/httphelper";
 import { DataTableColumnHeader } from "@/koksmat/components/data-table-column-header";
 import { Button } from "@/components/ui/button";
 import { GenericItem } from "@/koksmat/table/data/schema";
+import { jwtDecode } from "jwt-decode";
 interface CaseProps {
   scopes:string[],
   title:string,
@@ -19,6 +20,7 @@ const cases : CaseProps[]=[
   {scopes:["User.Read"],
   title:"Read user profile",
 "testurl":"https://graph.microsoft.com/v1.0/me"},
+
 {scopes:["Mail.ReadBasic"],
   title:"Read mails",
 "testurl":"https://graph.microsoft.com/v1.0/me/messages"},
@@ -53,7 +55,8 @@ const [latestError, setlatestError] = useState<any>()
                 });
                 thisCase.token = response.accessToken
                 const getResponse = await https(response.accessToken,"GET", thisCase.testurl)
-                setlatestResponse(getResponse)
+                
+                setlatestResponse({getResponse,token:jwtDecode(response.accessToken)})
 
           } catch (error) {
               try {
@@ -94,9 +97,6 @@ const [latestError, setlatestError] = useState<any>()
   
   <div>
 
-
-    
-   
   
   <GenericTable data={cases.map(c=>{return {title:c.scopes.join(","),
   
@@ -165,6 +165,10 @@ const [latestError, setlatestError] = useState<any>()
         )
       },
     }}/>
+    <div className="flex space-x-3">
+    Roles: {account?.idTokenClaims?.roles?.map((r:string)=><div>{r}</div>)}
+    </div>
+
 <div className="flex">
   <div >
       <h3>Latest response</h3>

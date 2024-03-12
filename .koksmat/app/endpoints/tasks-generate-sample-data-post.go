@@ -7,34 +7,29 @@ title: Generate Sample Data
 ---
 */
 package endpoints
+
 import (
-"context"
-"encoding/json"
-"os"
-"path"
-"github.com/swaggest/usecase"
-"github.com/365admin/nexi-cava/schemas"
-"github.com/365admin/nexi-cava/execution"
-"github.com/365admin/nexi-cava/utils"
+	"context"
+
+	"github.com/365admin/nexi-cava/execution"
+	"github.com/swaggest/usecase"
 )
+
 func TasksGenerateSampleDataPost() usecase.Interactor {
-type Request struct {
-	
-	
-
-}
-u := usecase.NewInteractor(func(ctx context.Context, input Request, output *string) error {
-	
-	_, err := execution.ExecutePowerShell("john","*","nexi-cava","20-tasks","00-generate-sample-data.ps1","" )
-	if (err != nil) {
-		return err
+	type Request struct {
 	}
-	
-	return err
+	u := usecase.NewInteractor(func(ctx context.Context, input Request, output *string) error {
 
-})
-u.SetTitle("Generate Sample Data")
-// u.SetExpectedErrors(status.InvalidArgument)
-u.SetTags("Tasks")
-return u
+		_, err := execution.ExecutePowerShell("john", "*", "nexi-cava", "20-tasks", "00-generate-sample-data.ps1", "")
+		if err != nil {
+			return err
+		}
+
+		return err
+
+	})
+	u.SetTitle("Generate Sample Data")
+	// u.SetExpectedErrors(status.InvalidArgument)
+	u.SetTags("Tasks")
+	return u
 }

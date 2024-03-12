@@ -3,7 +3,7 @@
 // -------------------------------------------------------------------
 /*
 ---
-title: Generate Sample Data
+title: Room Order Changes
 ---
 */
 package cmds
@@ -14,9 +14,9 @@ import (
 	"github.com/365admin/nexi-cava/execution"
 )
 
-func TasksGenerateSampleDataPost(ctx context.Context, args []string) (*string, error) {
+func EventsRoomOrderPost(ctx context.Context, args []string) (*string, error) {
 
-	_, pwsherr := execution.ExecutePowerShell("john", "*", "nexi-cava", "20-tasks", "00-generate-sample-data.ps1", "")
+	_, pwsherr := execution.ExecutePowerShell("john", "*", "nexi-cava", "30-events", "10-room-order.ps1", "")
 	if pwsherr != nil {
 		return nil, pwsherr
 	}

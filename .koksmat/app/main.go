@@ -1,4 +1,3 @@
-
 package main
 
 import (
@@ -7,7 +6,6 @@ import (
 
 	"github.com/365admin/nexi-cava/magicapp"
 )
-
 
 func main() {
 	info, _ := debug.ReadBuildInfo()
@@ -24,5 +22,6 @@ description: Collection of stuff build for nexi "CAVA"
 	magicapp.Setup(".env")
 	magicapp.RegisterServeCmd("CAVA", description, "0.0.1", 8080)
 	magicapp.RegisterCmds()
+	magicapp.RegisterServiceCmd()
 	magicapp.Execute(name, "CAVA", "")
 }

@@ -1,11 +1,11 @@
 <#---
-title: Submit Orders
-tag: submit-orders
+title: Close Delivery
+tag: close-delivery
 icon: magic.png
 api: post
 ---
 #
-# Submit Orders
+# Close Delivery
 
 #>
 

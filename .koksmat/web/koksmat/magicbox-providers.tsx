@@ -32,7 +32,7 @@ export const MagicboxProvider = ({ children }: Props) => {
 
       try {
         const result = await pca.loginPopup(request);
-        setuser({ name: result.account.name ?? result.account.username, email: result.account.username, image: "", id: result.account.localAccountId });
+        setuser({ name: result.account.name ?? result.account.username, email: result.account.username, image: "", id: result.account.localAccountId,roles: result.account.idTokenClaims?.roles ?? [] });
         return true;
       } catch (error) {
         return false;
@@ -43,9 +43,9 @@ export const MagicboxProvider = ({ children }: Props) => {
     signOut: function (): void {
       pca?.loginRedirect();
     },
-    setAccount: function (username: string, email: string, image: string, id: string): void {
+    setAccount: function (username: string, email: string, image: string, id: string,roles : string[]): void {
 
-      setuser({ name: username, email: email, image: image, id });
+      setuser({ name: username, email: email, image: image, id,roles });
     },
 
     user,

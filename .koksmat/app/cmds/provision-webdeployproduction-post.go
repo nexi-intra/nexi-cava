@@ -7,24 +7,19 @@ title: Web deploy to production
 ---
 */
 package cmds
+
 import (
-"context"
-"encoding/json"
-"os"
-"path"
-"github.com/spf13/cobra"
-"github.com/365admin/nexi-cava/schemas"
-"github.com/365admin/nexi-cava/execution"
-"github.com/365admin/nexi-cava/utils"
+	"context"
+
+	"github.com/365admin/nexi-cava/execution"
 )
-func ProvisionWebdeployproductionPost(ctx context.Context, args  []string)  ( *string, error) {
-	
-	_, pwsherr := execution.ExecutePowerShell("john","*","nexi-cava","60-provision","10-web.ps1","" )
-	if (pwsherr != nil) {
-		return nil,pwsherr
+
+func ProvisionWebdeployproductionPost(ctx context.Context, args []string) (*string, error) {
+
+	_, pwsherr := execution.ExecutePowerShell("john", "*", "nexi-cava", "60-provision", "10-web.ps1", "")
+	if pwsherr != nil {
+		return nil, pwsherr
 	}
 	return nil, nil
-	
-
 
 }
