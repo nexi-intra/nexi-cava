@@ -89,7 +89,7 @@ Sign In
       {error && <div className="text-red-500">Error: {error}</div>}
       {transactionId &&
       <div>
-        Copy this command to your terminal to write to "me"
+        Copy this command to your terminal 
         <div className="mt-4">
         <textarea  value={"nats publish log."+transactionId+" test"} className="w-[100%] font-mono text-sm">
          
