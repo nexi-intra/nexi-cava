@@ -29,6 +29,7 @@ export async function getTransactionId() {
     if (!natsConnectionString) {
       natsConnectionString = "ws://0.0.0.0:443"
     }
+  
     const natsConnections : string[] = natsConnectionString.split(",")
     return {
       servers: natsConnections

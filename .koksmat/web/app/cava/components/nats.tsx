@@ -19,6 +19,7 @@ export default function ShowNatsLog(props: { subject: string }) {
     if (natsservers.length===0) return;
     
     (async () => {
+      console.log("connecting to NATS using",natsservers);
       const nc = await connect({
         servers:natsservers,
         name: "cava",
