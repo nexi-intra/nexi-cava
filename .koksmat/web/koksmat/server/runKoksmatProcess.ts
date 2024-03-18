@@ -25,6 +25,7 @@ export const runKoksmatProcess = (command: string, args: string[], timeout: numb
 
       const sc = StringCodec();
       const payload: Payload = JSON.stringify({ command, args, timeout, channel:"log."+channel });
+      
        console.log("runKoksmatProcess", command, args, timeout, channel, payload)
     
       const msg = await nc.request(command, payload, { timeout: timeout * 1000 });

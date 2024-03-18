@@ -45,7 +45,7 @@ spec:
           - containerPort: $port
         env:
         - name: NATS
-          value: http://nats
+          value: ws://nats:443
 
         
 ---
