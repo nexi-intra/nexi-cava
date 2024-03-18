@@ -44,8 +44,8 @@ spec:
         ports:
           - containerPort: $port
         env:
-        - name: DEBUG
-          value: *
+        - name: NAME
+          value: VALUE
 
         
 ---
