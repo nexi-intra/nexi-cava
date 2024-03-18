@@ -95,7 +95,7 @@ Sign In
          
          </textarea>
          </div>
-     <ShowNatsLog  subject={"log."+transactionId} />
+     {/* <ShowNatsLog  subject={"log."+transactionId} /> */}
      </div>
      }
     </div>

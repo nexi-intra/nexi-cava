@@ -2,8 +2,11 @@ import { Result } from "@/koksmat/httphelper";
 import { AnyARecord } from "dns";
 import { connect, Msg, Payload, ServiceError, StringCodec } from "nats.ws";
 
+export interface INatsConfig {
+  servers : string[]
+}
 
-export const runKoksmatProcess = (command: string, args: string[], timeout: number, channel: string, cwd?: string, debug?: boolean): Promise<Result<string>> => {
+export const runKoksmatProcess = (command: string, args: string[], timeout: number, channel: string, natsConfig : INatsConfig): Promise<Result<string>> => {
   return new Promise(async (resolve, reject) => {
 
     let result: Result<any> = {
@@ -12,16 +15,13 @@ export const runKoksmatProcess = (command: string, args: string[], timeout: numb
       data: "",
     };
     try {
-      const servers = "ws://127.0.0.1:443"
 
-      const nc = await connect(
-        {servers: servers.split(","),
-      debug: false}
-      )
+      const {servers} = natsConfig
+
+      const nc = await connect({
+        servers
+      })
       
-      // sleep for 3 seconds
-
-      //await new Promise(resolve => setTimeout(resolve, 10000));
 
       const sc = StringCodec();
       const payload: Payload = JSON.stringify({ command, args, timeout, channel:"log."+channel });
