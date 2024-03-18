@@ -11,10 +11,12 @@ COPY --from=node /usr/local/include /usr/local/include
 COPY --from=node /usr/local/bin /usr/local/bin
 
 RUN apk add go
-RUN export PATH=$PATH:/usr/local/go/bin
-RUN export GOBIN=/usr/local/go/bin
+
+
+ENV GOBIN="/usr/local/bin"
 RUN go install github.com/nats-io/natscli/nats@latest
-# RUN /usr/local/go/bin/nats context add nats --server nats:4222 --description "NATS Prod" --select
+RUN go install github.com/nats-io/nats-server/v2@latest
+RUN nats context add nats --server nats:4222 --description "NATS Prod" --select
 
 RUN apk update
 RUN apk add --upgrade powershell   
@@ -31,6 +33,6 @@ RUN npm install -g pnpm
 RUN pnpm install
 RUN pnpm build
 
-EXPOSE 4323
+EXPOSE 4325
 
 CMD [ "pnpm","start"]
