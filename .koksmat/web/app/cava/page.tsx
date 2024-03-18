@@ -24,6 +24,7 @@ export default  function CavaHome() {
   const [transactionId, settransactionid] = useState("")
 
   const magicbox = useContext(MagicboxContext)
+  const {user} = magicbox
 
   const run = async (method : (id:string)=>Promise<Result<any>>) => {
     
@@ -32,8 +33,6 @@ export default  function CavaHome() {
     setresult("")
     seterror("")
 
-    const transactionId = await getTransactionId()
-    settransactionid(transactionId)
     const result = await method(transactionId)
     
 
@@ -45,10 +44,29 @@ export default  function CavaHome() {
   const doUpdate = async () => run(updateRooms)
   const doCreate = async () => run(createRooms)
   const doDelete = async () => run(deleteRooms)
+
+  useEffect(() => {
+   const load = async () => {
+    if (!user?.email) return;
+    const transactionId = await getTransactionId()
+    settransactionid(user.email+"."+transactionId)
+   }
+  
+   load()
+  }, [user])
+  if (!user?.email) return <div><Button
+
+onClick={async () => {
+  const signedIn = await magicbox.signIn(["User.Read"], "");
+  
+}}
+>
+Sign In
+</Button></div>
   return (
     <div >
       <div className="space-y-3 p-4">
-        {magicbox?.user?.name && <div>Logged in as {magicbox.user.name}</div>}
+        {user?.name && <div>Logged in as {user.name}</div>}
       <div>
        <Button disabled={running} onClick={()=>doCreate()}>Create Rooms</Button>
        </div>
@@ -65,13 +83,19 @@ export default  function CavaHome() {
        <Button disabled={running} onClick={()=>run()}>Run all</Button>
        </div>        */}
        </div>
+     
      {running && <div>Running... </div>}
       {result && <div>Result: {result}</div>}
       {error && <div className="text-red-500">Error: {error}</div>}
       {transactionId &&
       <div>
-        transactionId: {transactionId}
-     <ShowNatsLog  subject={"log.*"} />
+        Copy this command to your terminal to write to "me"
+        <div className="mt-4">
+        <textarea  value={"nats publish log."+transactionId+" test"} className="w-[100%] font-mono text-sm">
+         
+         </textarea>
+         </div>
+     <ShowNatsLog  subject={"log."+transactionId} />
      </div>
      }
     </div>

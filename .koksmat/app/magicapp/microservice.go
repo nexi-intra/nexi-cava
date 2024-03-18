@@ -78,7 +78,7 @@ func Update(req micro.Request) {
 		return
 	} else {
 		//		log.Println("Update done")
-		log.Println("Key", key, "Matched")
+		//log.Println("Key", key, "Matched")
 		req.RespondJSON("done")
 	}
 

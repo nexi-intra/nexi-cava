@@ -15,6 +15,7 @@ export default function ShowNatsLog(props: { subject: string }) {
   const logEntries2 = useRef<string[]>([])
   
   useEffect(() => {
+    
     if (natsservers.length===0) return;
     
     (async () => {
@@ -22,6 +23,7 @@ export default function ShowNatsLog(props: { subject: string }) {
         servers:natsservers,
         name: "cava",
       });
+      console.log("connected to NATS",subject);
       setNats(nc);
     })();
 
@@ -29,13 +31,14 @@ export default function ShowNatsLog(props: { subject: string }) {
       nats?.drain();
       console.log("closed NATS connection");
     };
-  }, [natsservers]);
+  }, [natsservers,subject]);
 
   useEffect(() => {
     if (!nats) return;
     const sc = StringCodec();
     logEntries2.current = []
-    const sub = nats.subscribe("log.1",{callback: (err, msg) => {
+
+    const sub = nats.subscribe(subject,{callback: (err, msg) => {
         if (err) {
             console.error(err);
             return;
@@ -49,17 +52,20 @@ export default function ShowNatsLog(props: { subject: string }) {
         v2.current = v2.current + 1;
         setversion(v2.current)
         
-    }});
+    }}
+    
+    
+    );
 
-
-    console.log("connected to NATS");
+    console.log("Subscribing to",subject)
+ 
     return () => {
         sub.unsubscribe();
       };
   }, [nats,subject]);
 //return null
   return (
-    <div className="">
+    <div className="border">
 
       {logEntries2.current.map((entry, i) => (
       <div key={i}>
