@@ -1,30 +1,39 @@
-"use server"
+"use server";
+import { run } from "@/magicservices/run";
+import { randomBytes } from "crypto";
 
-import { runProcess } from "@/koksmat/server/runProcess";
-import {randomBytes} from "crypto"
+export async function createRooms(transactionId: string) {
+  console.log("createRooms");
 
-
-export async function createRooms(transactionId:string) {
-  console.log("createRooms")
-  
-  return runProcess("nats",["request","meeting-infrastructure.create","x"],600,transactionId)
- 
+  return run(
+    "meeting-infrastructure.create",
+    [],
+    transactionId,
+    600,
+    transactionId
+  );
 }
-export async function updateRooms(transactionId:string) {
-  console.log("updateRooms")
-  return runProcess("nats",["request","meeting-infrastructure.update","x"],600,transactionId)
-
- 
+export async function updateRooms(transactionId: string) {
+  console.log("updateRooms");
+  return run(
+    "meeting-infrastructure.update",
+    [],
+    transactionId,
+    600,
+    transactionId
+  );
 }
-export async function deleteRooms(transactionId:string) {
-  console.log("deleteRooms")
-  return runProcess("nats",["request","meeting-infrastructure.delete","x"],600,transactionId)
- 
+export async function deleteRooms(transactionId: string) {
+  console.log("deleteRooms");
+  return run(
+    "meeting-infrastructure.delete",
+    [],
+    transactionId,
+    600,
+    transactionId
+  );
 }
 
 export async function getTransactionId() {
-  return randomBytes(16).toString("hex")
+  return randomBytes(16).toString("hex");
 }
-
-
-  

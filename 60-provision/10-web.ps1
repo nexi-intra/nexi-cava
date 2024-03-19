@@ -9,10 +9,10 @@ We start by finding which version tag to use
 $appname = "nexi-cava"
 $imagename = "nexi-cava"
 $dnsname = "cava.home.nexi-intra.com"
-$inputFile = join-path  $env:KITCHENROOT $appname ".koksmat","koksmat.json"
+$inputFile = join-path  $env:KITCHENROOT $appname ".koksmat", "koksmat.json"
 $port = "4325"
 if (!(Test-Path -Path $inputFile) ) {
-   Throw "Cannot find file at expected path: $inputFile"
+  Throw "Cannot find file at expected path: $inputFile"
 } 
 $json = Get-Content -Path $inputFile | ConvertFrom-Json
 $version = "v$($json.version.major).$($json.version.minor).$($json.version.patch).$($json.version.build)"
@@ -45,7 +45,7 @@ spec:
           - containerPort: $port
         env:
         - name: NATS
-          value: ws://nats:443
+          value: nats://nats:4222
 
         
 ---
