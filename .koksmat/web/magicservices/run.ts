@@ -28,7 +28,10 @@ export async function run<T>(
   let nc: NatsConnection | null = null;
   let data: T | undefined = undefined;
   try {
-    nc = await connect({ servers: [] });
+    nc = await connect({
+      servers: [process.env.NATS ?? "nats://127.0.0.1:4222"],
+    });
+
     const payload = JSON.stringify(req);
     const sc = StringCodec();
     const encodedPayload = sc.encode(payload);
